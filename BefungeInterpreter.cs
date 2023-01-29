@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Codewars;
-
+// ReSharper disable once CheckNamespace
 public class BefungeInterpreter
 {
     private char[,] _grid = null!;
@@ -24,10 +23,15 @@ public class BefungeInterpreter
         }
 
         CreateGrid(code);
+        OutputGrid();
 
         while (CurrentChar != '@')
         {
-            if (_isStringMode)
+            if (CurrentChar == '"')
+            {
+                ToggleStringMode();
+            }
+            else if (_isStringMode)
             {
                 _stack.Push(CurrentChar);
             }
@@ -44,7 +48,7 @@ public class BefungeInterpreter
 
     private void CreateGrid(string code)
     {
-        var lines = code.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        var lines = code.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         var longestRowLength = lines.MaxBy(l => l.Length)!.Length;
         _grid = new char[lines.Length, longestRowLength];
         for (var i = 0; i < _grid.GetLength(0); i++)
@@ -55,6 +59,18 @@ public class BefungeInterpreter
                 var symbol = line.ElementAtOrDefault(j);
                 _grid[i, j] = symbol != default ? symbol : ' ';
             }
+        }
+    }
+
+    private void OutputGrid()
+    {
+        for (int i = 0; i < _grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < _grid.GetLength(1); j++)
+            {
+                Console.Write(_grid[i,j] + " ");
+            }
+            Console.WriteLine();
         }
     }
 
@@ -120,9 +136,6 @@ public class BefungeInterpreter
             case '|':
                 PopAndChooseDirectionVertically();
                 break;
-            case '"':
-                ToggleStringMode();
-                break;
             case ':':
                 Duplicate();
                 break;
@@ -152,7 +165,7 @@ public class BefungeInterpreter
         }
     }
 
-    public static int Repeat(int value, int min, int max)
+    private static int Repeat(int value, int min, int max)
     {
         if (value < min)
         {
@@ -378,6 +391,6 @@ public class BefungeInterpreter
         var x = SafePop();
 
         var v = _grid[y, x];
-        _stack.Push((int)v);
+        _stack.Push(v);
     }
 }
