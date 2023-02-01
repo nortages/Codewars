@@ -1,6 +1,6 @@
 ﻿using System;
 
-var befungeInterpreter = new BefungeInterpreter();
-// var output = befungeInterpreter.Interpret(">987v>.v\nv456<  :\n>321 ^ _@");
-var output = befungeInterpreter.Interpret(">25*\"!dlroW olleH\":v\n                v:,_@\n                >  ^");
-Console.WriteLine($"Output: {output}");
+var (output, index) = Kata.Encode("Humble Bundle");
+Console.WriteLine($"Output: {output}; index: {index}");
+var input = Kata.Decode(output, index);
+Console.WriteLine($"Input: {input}");
